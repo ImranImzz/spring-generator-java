@@ -78,5 +78,50 @@ public class DomainController {
         }
     }
 
-    
+    @PostMapping("/javagenerator")
+    public ResponseEntity<byte[]> generateJavaClasss(@RequestBody DomainGenerator jsonModel) {
+        try {
+            File tempFile = jsonService.createJavaFile(jsonModel);
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+            try (ZipOutputStream zipOutputStream = new ZipOutputStream(byteArrayOutputStream)) {
+                // Add each file in the folder to the zip
+                for (File file : tempFile.listFiles()) {
+                    if (file.isFile()) {
+                        ZipEntry zipEntry = new ZipEntry(file.getName());
+                        zipOutputStream.putNextEntry(zipEntry);
+
+                        byte[] fileContent = Files.readAllBytes(file.toPath());
+                        zipOutputStream.write(fileContent);
+
+                        zipOutputStream.closeEntry();
+                    }
+                }
+            }
+
+            // Set response headers for the zip file
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+            headers.setContentDispositionFormData("attachment", "zipped_folder.zip");
+
+            // Clean up: delete the files in the folder
+            for (File file : tempFile.listFiles()) {
+                file.delete();
+            }
+
+            // Delete the folder
+            tempFile.delete();
+
+            // Return the zip file as a byte array in the response
+            byte[] zipBytes = byteArrayOutputStream.toByteArray();
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(zipBytes);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // Handle the exception gracefully.
+        }
+    }
+
 }
