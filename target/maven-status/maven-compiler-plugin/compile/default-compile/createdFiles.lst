@@ -1,0 +1,10 @@
+com\spring\generator\service\ServiceImplService.class
+com\spring\generator\service\RepositoryService.class
+com\spring\generator\domain\VariableEntry.class
+com\spring\generator\GeneratorApplication.class
+com\spring\generator\service\ServiceGenService.class
+com\spring\generator\service\GeneratorService.class
+com\spring\generator\web\controller\DomainController.class
+com\spring\generator\service\DomainService.class
+com\spring\generator\service\ControllerService.class
+com\spring\generator\domain\DomainGenerator.class
