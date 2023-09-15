@@ -74,7 +74,7 @@ public class DomainController {
                     .body(byteArrayOutputStream.toByteArray());
         } catch (Exception e) {
             e.printStackTrace();
-            return (ResponseEntity<byte[]>) ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR);
+            return null;
         }
     }
 
